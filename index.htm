@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">  
+  <meta content="telephone=no" name="format-detection">
+<title>施家问候</title>
+<link rel="stylesheet" href="css/main.css">
+<style type="text/css">
+.demo{width:95%;margin:60px auto 10px auto;padding:10px;}
+</style>
+
+</head>
+
+<body>
+  <script type="text/javascript">
+  	//获取get参数
+   	function GetQueryString(name)
+   	{
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+   	}	
+   	var theguy = GetQueryString("userinfo");
+   	var thesex = "";
+   	var thename = "";
+  </script>
+
+<div id="main" style="width:30%">
+<table style="position:absolute;z-index:-1;top:1%;left:1%;" >
+		<tr>
+			<td><img id="bar0" height="80" width="118" src="timg.jpg"/></td>
+			<td>祝您身体健康阖家幸福！</td>
+		</tr>
+</table>	
+	<div class="demo">
+		<div id="danmup" style="margin:1px auto"></div>
+	</div>
+	
+</div>
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery.shCircleLoader.js"></script>
+<script src="js/jquery.danmu.js"></script>
+<script src="js/main.js"></script>
+<script src="js/tripledes.js"></script>
+<script src="js/mode-ecb.js"></script>
+
+        <script>
+            function decryptByDES(ciphertext, key) {
+                var keyHex = CryptoJS.enc.Utf8.parse(key);
+                // direct decrypt ciphertext
+                var decrypted = CryptoJS.DES.decrypt({
+                    ciphertext: CryptoJS.enc.Base64.parse(ciphertext)
+                }, keyHex, {
+                    mode: CryptoJS.mode.ECB,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+                return decrypted.toString(CryptoJS.enc.Utf8);
+            }
+            
+            theguy = decryptByDES(decodeURIComponent(theguy), "HR-Wechat");
+            var arr = theguy.split("-");
+            theguy = arr[0];
+
+$(function () {
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      async : false,
+      url: "userinfo.json",
+      success: function (result) {
+                $.each(result,function(index,obj){          
+                if(theguy==obj["sesa"])
+                {                	
+                	thename = obj["name"];
+                	thesex = obj["sex"];
+                }               
+                });
+      }
+    });
+    
+$("#danmup").DanmuPlayer({
+	src: "rcrecord_0.mp4",
+    height: "280px", //区域的高度
+    width: "300px" //区域的宽度
+  });
+
+  $("#danmup .danmu-div").danmu("addDanmu",[
+    { "text":thename + thesex + "，公司人力资源部祝贺您新婚快乐，百年好合！" ,color:"red",size:1,position:0,time:2}
+    ,{ "text":thename + thesex + "，公司人力资源部祝贺您喜得贵子！" ,color:"green",size:1,position:0,time:3}
+    ,{ "text":"心想事成！" ,color:"#20f",size:1,position:0,time:10}
+    ,{ "text":"祝您天天开心！" ,color:"yellow" ,size:1,position:0,time:3}
+    ,{ "text":thename + thesex + "，公司人力资源部祝贺您喜得千金！" , color:"red" ,size:1,position:0,time:19}
+    ,{ "text":"----集团人力资源部" ,color:"orange",size:1,position:0,time:23}
+
+  ])    
+    
+});            
+	
+
+</script>
+</body>
+</html>
