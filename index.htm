@@ -70,13 +70,16 @@ var url = ['https://epayslip.schneider-electric.cn/HRServiceRESTful/api/External
       async : false,
       url: url,
       success: function (result) {
-                $.each(result.resultData,function(index,obj){          
+      var resultData = result.resultData;
+      if(resultData !== null){
+                      $.each(resultData,function(index,obj){          
                 if(theguy==obj["sesa"])
                 {                	
                 	thename = obj["name"];
                 	thesex = obj["sex"];
                 }               
                 });
+      }
       }
     });
     
