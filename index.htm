@@ -63,11 +63,12 @@
             theguy = arr[0];
 
 $(function () {
+var url = ['https://epayslip.schneider-electric.cn/HRServiceRESTful/api/ExternalApp/GetEmployeeName?id=',theguy,'&token=fje_wi26u28!3821'].join('');
     $.ajax({
       type: "get",
       dataType: "json",
       async : false,
-      url: "userinfo.json",
+      url: url,
       success: function (result) {
                 $.each(result,function(index,obj){          
                 if(theguy==obj["sesa"])
