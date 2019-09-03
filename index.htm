@@ -70,7 +70,7 @@ var url = ['https://epayslip.schneider-electric.cn/HRServiceRESTful/api/External
       async : false,
       url: url,
       success: function (result) {
-                $.each(result,function(index,obj){          
+                $.each(result.resultData,function(index,obj){          
                 if(theguy==obj["sesa"])
                 {                	
                 	thename = obj["name"];
