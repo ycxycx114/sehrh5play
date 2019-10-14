@@ -1,102 +1,118 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">  
-  <meta content="telephone=no" name="format-detection">
-<title>施家问候</title>
-<link rel="stylesheet" href="css/main.css">
-<style type="text/css">
-.demo{width:95%;margin:60px auto 10px auto;padding:10px;}
-</style>
-
+    <title></title>
+    <meta charset="utf-8" />
+<style type="text/css"> 
+ul {
+ position: absolute; 
+ list-style-type: none;
+ color:yellow;
+ font-size:30px;
+ top:5%;left:25%;
+ }   
+      
+</style>    
 </head>
+<body background="test.gif" style="overflow-x:hidden;background-repeat:no-repeat;background-size:100% 100%;background-attachment: fixed;">
+<div style="display:none;">
+<div id="source">
+    来自施耐德电气中国区管理团队的祝福：
+    <p>尊敬的</p>
+    <ul>
+        <li>祝您新婚快乐！</li>
+        <li>百年好合！</li>
+        <li>早生贵子（or 千金）！</li>
+    </ul>
+</div></div>
+<div id="output">
 
-<body>
-  <script type="text/javascript">
-  	//获取get参数
-   	function GetQueryString(name)
-   	{
-        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-        var r = window.location.search.substr(1).match(reg);
-        if(r!=null)return  unescape(r[2]); return null;
-   	}	
-   	var theguy = GetQueryString("userinfo");
-   	var thesex = "";
-   	var thename = "";
-  </script>
-
-<div id="main" style="width:30%">
-<table style="position:absolute;z-index:-1;top:1%;left:1%;" >
-		<tr>
-			<td><img id="bar0" height="80" width="118" src="timg.jpg"/></td>
-			<td>祝您身体健康阖家幸福！</td>
-		</tr>
-</table>	
-	<div class="demo">
-		<div id="danmup" style="margin:1px auto"></div>
-	</div>
-	
 </div>
-<script src="js/jquery-2.1.4.min.js"></script>
-<script src="js/jquery.shCircleLoader.js"></script>
-<script src="js/jquery.danmu.js"></script>
-<script src="js/main.js"></script>
-<script src="js/tripledes.js"></script>
-<script src="js/mode-ecb.js"></script>
 
-        <script>
-            function decryptByDES(ciphertext, key) {
-                var keyHex = CryptoJS.enc.Utf8.parse(key);
-                // direct decrypt ciphertext
-                var decrypted = CryptoJS.DES.decrypt({
-                    ciphertext: CryptoJS.enc.Base64.parse(ciphertext)
-                }, keyHex, {
-                    mode: CryptoJS.mode.ECB,
-                    padding: CryptoJS.pad.Pkcs7
-                });
-                return decrypted.toString(CryptoJS.enc.Utf8);
-            }
-            
-            theguy = decryptByDES(decodeURIComponent(theguy), "HR-Wechat");
-            var arr = theguy.split("-");
-            theguy = arr[0];
+<script type="text/javascript">
+  class Typing {
+    constructor(opts) {
+      this.opts = opts || {};
+      this.source = opts.source;
+      this.output = opts.output;
+      this.delay = opts.delay || 120;
+      this.chain = {
+        parent: null,
+        dom: this.output,
+        val: []
+      };
+      if (!(typeof this.opts.done === 'function')) this.opts.done = function () {
+      };
+    }
 
-$(function () {
-var url = ['https://epayslip.schneider-electric.cn/HRServiceRESTful/api/ExternalApp/GetEmployeeName?id=',theguy,'&token=fje_wi26u28!3821'].join('');
-    $.ajax({
-      type: "get",
-      dataType: "json",
-      async : false,
-      url: url,
-      success: function (result) {
-      var resultData = result.resultData;
-      if(resultData !== null){
-                     thename = resultData.name;
-                	thesex = resultData.sex;
+    init() {
+      //初始化函数
+      this.chain.val = this.convert(this.source, this.chain.val);
+    }
+
+    convert(dom, arr) {
+      //将dom节点的子节点转换成数组，
+      let children = Array.from(dom.childNodes)
+      for (let i = 0; i < children.length; i++) {
+        let node = children[i]
+        if (node.nodeType === 3) {
+          arr = arr.concat(node.nodeValue.split(''))   //将字符串转换成字符串数组，后面打印时才会一个一个的打印
+        } else if (node.nodeType === 1) {
+          let val = []
+          val = this.convert(node, val)
+          arr.push({
+            'dom': node,
+            'val': val
+          })
+        }
       }
+      return arr
+    }
+
+    print(dom, val, callback) {
+      setTimeout(function () {
+        dom.appendChild(document.createTextNode(val));
+        callback();
+      }, this.delay);
+    }
+
+    play(ele) {
+      //当打印最后一个字符时，动画完毕，执行done
+      if (!ele.val.length) {
+        if (ele.parent) this.play(ele.parent);
+        else this.opts.done();
+        return;
       }
-    });
-    
-$("#danmup").DanmuPlayer({
-	src: "rcrecord_0.mp4",
-    height: "280px", //区域的高度
-    width: "300px" //区域的宽度
-  });
+      let current = ele.val.shift()  //获取第一个元素，同时删除数组中的第一个元素
+      if (typeof current === 'string') {
+        this.print(ele.dom, current, () => {
+          this.play(ele); //继续打印下一个字符
+        })
+      } else {
+        let dom = current.dom.cloneNode() //克隆节点，不克隆节点的子节点，所以不用加参数true
+        ele.dom.appendChild(dom)
+        this.play({
+          parent: ele,
+          dom,
+          val: current.val
+        })
+      }
+    }
 
-  $("#danmup .danmu-div").danmu("addDanmu",[
-    { "text":thename + thesex + "，公司人力资源部祝贺您新婚快乐，百年好合！" ,color:"red",size:1,position:0,time:2}
-    ,{ "text":thename + thesex + "，公司人力资源部祝贺您喜得贵子！" ,color:"green",size:1,position:0,time:3}
-    ,{ "text":"心想事成！" ,color:"#20f",size:1,position:0,time:10}
-    ,{ "text":"祝您天天开心！" ,color:"yellow" ,size:1,position:0,time:3}
-    ,{ "text":thename + thesex + "，公司人力资源部祝贺您喜得千金！" , color:"red" ,size:1,position:0,time:19}
-    ,{ "text":"----集团人力资源部" ,color:"orange",size:1,position:0,time:23}
-
-  ])    
-    
-});            
-	
-
+    start() {
+      this.init();
+      this.play(this.chain);
+    }
+  }
+</script>
+<script type="text/javascript">
+  let source = document.getElementById('source')
+  let output = document.getElementById('output')
+  let typing = new Typing({
+    source,
+    output
+  })
+  typing.start()
 </script>
 </body>
 </html>
