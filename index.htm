@@ -82,9 +82,8 @@
                     if (resultData !== null) {
                         thename = resultData.name;
                         thesex = resultData.sex;
-                        var emp = thename + thesex;
-                        $("#employee").text(emp);
-                        console.log(source);
+                        var emp = empsource.find("div.employee");
+                        console.log(emp);
                     }
                 }
             });
