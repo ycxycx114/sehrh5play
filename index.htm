@@ -76,14 +76,14 @@
             $.ajax({
                 type: "get",
                 dataType: "json",
-                async: false,
                 url: url,
                 success: function (result) {
                     var resultData = result.resultData;
                     if (resultData !== null) {
                         thename = resultData.name;
                         thesex = resultData.sex;
-                        $("#employee").text(thename + thesex);
+                        var emp = thename + thesex;
+                        $("#employee").text(emp);
                         alert(thename);
                     }
                 }
