@@ -36,7 +36,7 @@
     <div style="display:none;">
         <div id="source">
             来自施耐德电气中国区管理团队的祝福：
-            <p>尊敬的</p><div name="employee"></div>
+            <p>尊敬的</p><div id="employee"></div>
             <ul>
                 <li>祝您新婚快乐！</li>
                 <li>百年好合！</li>
@@ -156,11 +156,8 @@
                     if (resultData !== null) {
                         thename = resultData.name;
                         thesex = resultData.sex;
-                        console.log(source);
-                        var emp = $(source).find("div")[0];
-                        console.log(emp);
-                        $(emp).append(thename+thesex);
-                        console.log(source);
+                        $("#employee").append(thename+thesex);
+                        console.log($("#source").html());
                     }
                                 
                     let source = document.getElementById('source')
