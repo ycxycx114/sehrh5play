@@ -162,17 +162,16 @@
                         $(emp).append(thename+thesex);
                         console.log(source);
                     }
+                                
+                    let source = document.getElementById('source')
+                    let output = document.getElementById('output')
+                    let typing = new Typing({
+                        source,
+                        output
+                    })
+                    typing.start()
                 }
             });
-            
-                    
-            let source = document.getElementById('source')
-            let output = document.getElementById('output')
-            let typing = new Typing({
-            source,
-            output
-            })
-            typing.start()
         });
 
     </script>
