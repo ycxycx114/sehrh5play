@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -83,11 +83,13 @@ var url = ['https://epayslip.schneider-electric.cn/HRServiceRESTful/api/External
       if(resultData !== null){
                      thename = resultData.name;
                 	thesex = resultData.sex;
+                	document.getElementById('employee').innerHTML = thename + thesex; 
+                	alert(thename);
       }
       }
     });
     
-document.getElementById('employee').innerHTML = thename + thesex;  
+ 
 </script>
 <script type="text/javascript">
   class Typing {
